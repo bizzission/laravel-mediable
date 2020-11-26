@@ -17,14 +17,14 @@ class CreateMediableTables extends Migration
             Schema::create(
                 'media',
                 function (Blueprint $table) {
-                    $table->increments('id');
+                    $table->bigIncrements('id');
                     $table->string('disk', 32);
                     $table->string('directory');
                     $table->string('filename');
                     $table->string('extension', 32);
                     $table->string('mime_type', 128);
                     $table->string('aggregate_type', 32);
-                    $table->integer('size')->unsigned();
+                    $table->unsignedBigInteger('size')->unsigned();
                     $table->timestamps();
 
                     $table->unique(['disk', 'directory', 'filename', 'extension']);
@@ -37,13 +37,15 @@ class CreateMediableTables extends Migration
             Schema::create(
                 'mediables',
                 function (Blueprint $table) {
-                    $table->integer('media_id')->unsigned();
+                    $table->bigIncrements('media_id')->unsigned();
                     $table->string('mediable_type');
-                    $table->integer('mediable_id')->unsigned();
+                    $table->unsignedBigInteger('mediable_id')->unsigned();
                     $table->string('tag');
-                    $table->integer('order')->unsigned();
+                    $table->unsignedBigInteger('order')->unsigned();
 
-                    $table->primary(['media_id', 'mediable_type', 'mediable_id', 'tag']);
+                    // $table->primary(['media_id', 'mediable_type', 'mediable_id', 'tag']);
+
+
                     $table->index(['mediable_id', 'mediable_type']);
                     $table->index('tag');
                     $table->index('order');
@@ -52,6 +54,7 @@ class CreateMediableTables extends Migration
                         ->cascadeOnDelete();
                 }
             );
+            DB::unprepared('ALTER TABLE `mediables` DROP PRIMARY KEY, ADD PRIMARY KEY (  `media_id`, `mediable_type`, `mediable_id`, `tag` )');
         }
     }
 

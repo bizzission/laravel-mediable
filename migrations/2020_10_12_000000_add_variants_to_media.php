@@ -20,7 +20,7 @@ class AddVariantsToMedia extends Migration
                 $table->string('variant_name', 255)
                     ->after('size')
                     ->nullable();
-                $table->integer('original_media_id')
+                $table->unsignedBigInteger('original_media_id')
                     ->unsigned()
                     ->after('variant_name')
                     ->nullable();
